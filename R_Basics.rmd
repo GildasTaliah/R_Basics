@@ -1,0 +1,551 @@
+---
+title: "R - Basics"
+author: "Gildas Taliah"
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+  html_document:
+    df_print: kable
+    toc: yes
+    toc_depth: '2'
+    number_sections: yes
+    theme: cosmo
+---
+<style>
+body {text-align: justify}
+</style>
+---
+
+# Preliminaries
+
+In this project we present the basics of R. We will have a look at the syntax, some basic objects and functions of R. The great advantage of R is that it is free, easy to understand/use and very powerful (on the other hand it is slower than some other prog lang like C++, Matlab, python etc. ). Therefore it is used by many people especially in academia all over the world and its user base is still growing.
+
+Its huge user base is a great advantage, should not surprise that for many problems we might think of or encounter later on, a solution already exists somewhere (Google, GitHub, GPT etc is our friend!).
+
+To use the programs of others we will need to install certain so-called packages. For this purpose R offers the function **install.packages("???")** [Note the quotes!]. To be able to use these packages in our session we have to use the command **library(???)**. The installation of a certain package is only needed once, then we call to the library every time we restart R! 
+
+To make things work we have to first install the four packages and activate them. To do so press the small green run button in the grey box below:
+
+```{r eval=FALSE}
+# I put a '#' cause I already have
+#install.packages("rmarkdown")
+#install.packages("formatR")
+#install.packages("caTools")
+#install.packages("knitr")
+library(rmarkdown)
+library(formatR)
+library(caTools)
+library(knitr)
+```
+
+Especially in the beginning a very useful function is the help. We can open it in R by typing **help(???)**.
+
+```{r warning=FALSE, error=TRUE}
+# Call the help page of the command help
+help(help)
+```
+
+Note that the hash tag (\#) can be used in R scripts to make comments. Comments are just for the reader of the code and will not be executed by R. A good program should include comments where the code is explained. 
+
+
+# Numbers, vectors and basic functions
+Of course R could be used as an (advanced) pocket calculator by using the operator **"+"**, **"-"**, **"$\mathbf{\cdot}$"** or **"/"**. We can store the results in variables. The name of the variable is always on the left, the statement you would like to save on the right. We use **"="** or **"<-"** to assign something to a variable name. Note that there are certain rules for variable names: It has to begin with a letter, special characters are (mostly) not allowed and certain names as *TRUE* or *FALSE* are reserved for R commands or functions. If we use the same name for a variable twice we overwrite the content of the former.  
+
+Calculate the square of 5 and save the result in the variable x. What is x? Now assign the value 7 to x. What is x now?
+
+```{r   warning=FALSE, error=TRUE}
+x = 5^2
+x
+x = 7
+x
+```
+See that!
+
+We can have a look at the content of any variable by calling the name - as we did for x. Very often in practice we will deal with (large) data sets. The most basic R object to save data - which is called data structure - is a vector. A vector is easy to construct via the function **c(???)**. 
+
+```{r   warning=FALSE, error=TRUE}
+vec = c(3, 5, 7, 9, 11, 13, 15)
+vec
+```
+
+Sometimes this takes time to type out therefore another useful function to create a vector based on a certain pattern is **seq(???)**. Any function in R has a name - e.g. **"seq"** - and round brackets **"()"**, pretty much like in maths and stats. The *???* are called arguments. If you have a look at the help page of the function **seq()**
+
+```{r   warning=FALSE, error=TRUE}
+help(seq)
+```
+
+We notice that this is structured in different parts which are very typical for (most) help pages of functions. First a description what the function is intended to do, the explanation of the syntax (Usage) followed by a list of potential arguments and at the very end you find very often some examples to illustrate the usage. 
+
+Try to create the same vector as in the previous part using the function **seq()**.
+
+```{r   warning=FALSE, error=TRUE}
+vec2 = seq(3, 15, 2)
+vec2
+```
+
+Create a sequence of integers starting at 1 ending at 100 by specifying all arguments with names. 
+
+```{r   warning=FALSE, error=TRUE}
+s = seq(from = 1, to = 100, length.out = 10)
+s
+s = seq(from = 1, to = 100, by = 1)
+s
+```
+
+
+A very important difference to some other programming languages is that R will manipulate (numeric) vectors element wise. For example the scalar product of two vectors a and b of the same length *<a,b>* is typically *ab* but not in R!
+
+Construct two numeric vectors a and b with the same number of elements (n = 4) and multiply them
+
+```{r   warning=FALSE, error=TRUE}
+a = c(1,2,3,4, 4.5)
+b = c(5,6,7,8, 8.5)
+a*b           # elementwise
+a%*%b         # scalar product
+```
+
+In some applications this is very useful in other applications you really have to think hard how to translate element wise manipulations of a vector to your desired outcome. If we multiply (divide, ...) vectors of different length the shorter vector will be recycled automatically. Note that if the length of the shorter is an exact multiple of the larger vector you will not even get an error message, otherwise only a warning.  
+
+Sometimes you may be interested in certain subsets of a given vector. In R this is possible by specifying the name and the index number of the elements you are interested in, e.g. *vec[1:3]* which extracts the first three elements of the vector vec. 
+
+How can you obtain the elements 2 to 5 and 7 of the vector vec?
+
+```{r   warning=FALSE, error=TRUE}
+vec[1:3]
+vec[c(2:5,7)]
+```
+
+Notice that if you would like to obtain elements of a vector (or later any data structure) you have to use rectangular brackets **"[]"**, if you would like to call a function always round brackets **"()"**. You can exclude certain elements of a vector with a minus, e.g. *vec[-(2:5)]*.
+
+
+
+We proceed to solve related exercises. 
+
+1.1 Create a vector "prob" with 50 elements which has the following form $prob = \begin{pmatrix} 1 & 4 & 9 & 16 & \cdots\end{pmatrix}$. 
+
+```{r}
+prob = seq(from=1, to=50, by=1)
+prob = prob^2
+print(prob)
+```
+
+1.2 Calculate the scalar product for the vector prob with itself.
+
+```{r}
+prob_scalar = prob%*%prob
+print(prob_scalar)
+```
+
+1.3 Take the square root of the vector prob and add this to this vector. How can you obtain the same result? Test whether the difference is indeed 0.
+
+```{r}
+prob_sqrt = sqrt(prob)
+prob_transform1 = prob + prob_sqrt
+prob_transform2 = prob + seq(from=1, to=50, by=1)
+identical(prob_transform1, prob_transform2)
+```
+1.4 Construct another vector "alphabet" consisting of characters. To this end use the build in variable letters. Can you add the vectors alphabet and prob? Why or why not? Set up a logical vector "logi"  and use it instead of alphabet. What can you conclude?
+
+```{r}
+alphabet = letters
+print(alphabet)
+letters
+# Test prob + alphabet
+# prob + alphabet # Afterwards, delete this line or turn it into a comment to continue
+logi = rep(c(TRUE, FALSE), 25)
+prob + logi 
+```
+
+We cannot add a vector of whose elements are character type ones to a numeric vector. Additionally, the dimensions would not match.
+Assuming that logi has the same length as prob, TRUE is interpreted as 1 while FALSE is treated as 0.
+
+
+1.5 Find the minimal and maximal value as well as the sum and the range of the vector zeta. In addition use the function \emph{summary()}.
+
+```{r}
+zeta = rnorm(1000)
+zeta_min = min(zeta)
+zeta_max = max(zeta)
+zeta_sum = sum(zeta)
+zeta_mean = mean(zeta)
+zeta_range = range(zeta)
+print(paste("zeta_min: ", zeta_min))
+print(paste("zeta_max: ", zeta_max))
+print(paste("zeta_sum: ", zeta_sum))
+print(paste("zeta_mean: ", zeta_mean))
+print(paste("zeta_range: min =", zeta_range[1], ", max =", zeta_range[2], ", difference = ", zeta_range[2]-zeta_range[1]))
+
+summary(zeta)
+
+
+```
+
+
+1.6 Now extract the minimal and maximal values of the vector zeta and save these in the variables min and max. Additionally count how many times you obtained a value smaller than 0. How many data points are in the interval from -1 to 1?
+
+```{r}
+min = zeta_min
+max = zeta_max
+smaller_zero = sum(zeta < 0)
+minus_one_to_one = sum(zeta >= -1 & zeta <= 1)
+print(paste("No. of elements < 0: ", smaller_zero))
+print(paste("No. of elements -1 < zeta < 1: ", minus_one_to_one))
+```
+1.7 Construct a numeric variable "threshold" with any number you like. Exclude all elements of the vector zeta that are greater than your threshold value. Repeat this procedure with different threshold values.
+
+```{r}
+zeta_sort = sort(zeta)
+zeta_threshold = zeta[zeta >=  -1 & zeta <= 1]
+range(zeta_threshold)
+length(zeta_threshold)
+```
+
+
+
+1.8 Use the vectors a1 and b1 to verify both DeMorgan's laws. Do not forget to test the result!
+
+```{r}
+a1 = rbinom(n = 10000, size = 1, prob = 0.5)
+b1 = rbinom(n = 10000, size = 1, prob = 0.5)
+all(!(a1|b1)==((!a1)&(!b1))) 
+all(!(a1&b1)==((!a1)|(!b1)))
+```
+
+It checks if the statement "not (a1 or b1)" is logically equivalent to "not a1 and not b1" for all observations. Second line checks if the statement "not (a1 and b1)" is logically equivalent to "not a1 or not b1" for all observations.  
+
+
+
+# Loops
+Whenever something has to be repetitively executed the most basic procedure to solve such a task is a so called *loop*. Loops are just designed to repeatedly execute (similar) expressions. In R two basic types of loops exist: 1. the so called *"for"* loop and 2. the *"while"* loop (to be more precise there exist a third option: repeat loop, but this behaves pretty much like the while loop). The for loop is easier to handle, therefore we begin with that. You might have a look at the help page. The syntax for a for loop is quiet similar to that for 'if' statements. 
+
+Suppose that we want to calculate the sum of the variable s from earlier without using the *sum()* function. 
+
+```{r   warning=FALSE, error=TRUE}
+sum = 0
+for(i in 1:length(s)){
+  sum=sum+s[i]
+}
+sum
+sum(s)
+```
+  
+Having a look at the list of variables, the variable sum has the value 5050 which is indeed the sum of all elements from 1 to 100 (we used use *sum()* to verify this result). 
+
+The second type of loops are the so called while loops. The syntax is similar to the for loop with a main difference. The statement within the **{}**-brackets is executed as long as the condition in the round brackets **()** is true! This yields a major problem because the condition may be always true, therefore the while loop will never stop (infinite loop)!!! 
+
+Again calculate the sum of s:
+
+```{r   warning=FALSE, error=TRUE}
+i = 1
+sum = 0
+while(i<=length(s)){
+  sum = sum + s[i]
+  i = i+1
+}
+sum
+```
+
+To ensure that the while loop will stop we have to increase the index i within the loop.  
+
+Loops are relatively easy to use, unfortunately they are relatively slow. If we are running for example larger simulations it might pay off to use *vectorized commands or predefined functions* instead of loops to save a lot of computation time.
+
+
+# Writing functions
+
+R is a functional language which means almost everything is a function (besides data of course). We are recommended to use this mind-set, too. Thus if we have to implement a new procedure for a given task, analyzing data or running a simulation we define our own function that does exactly this. Typically this is not one big function but a function that makes use of other functions (which we have also written for this purpose). The goal for almost any larger project is to disaggregate this project into smaller parts that can be handled separately (maybe with some dependency between those) and write a function for each sub-part.  
+
+Now let's write our first function. We need several things to define a function. A name, some arguments or variables that the function may use and of course a procedure. The syntax is as follows:
+
+```{r   warning=FALSE, error=TRUE}
+name = function(argument1, argument2, argument3 = a,...){
+  procedure
+  return(result)
+}
+```
+
+Note that the third argument has a default value, i.e. a value which is used whenever nothing is specified for this argument by the user. 
+
+Below we ttry writing a function that calculates the mean of any numerical vector. We use the functions **sum()** and **length()** for this purpose. Test this function with the vector a you defined earlier.
+
+```{r   warning=FALSE, error=TRUE}
+our_mean = function(x){
+  result = sum(x)/length(x)
+  return(result)
+}
+
+our_mean(s)
+identical(our_mean(s), mean(s))
+```
+
+Now let us write some (custom/predefined) functions. 
+
+2.1 Write a procedure to obtain the smallest value in the vector zeta. Use a for- or while-loop. Compare the procedure to the function _min()_.
+
+```{r}
+# Test vector
+zeta = rnorm(1000)
+
+# Create a function
+min_vec = function(x){
+  # Inputs
+  #   x: some vector
+  # Outputs
+  #   res: Minimum of vector x
+  
+  n = length(x)
+  res = x[1]
+  for (i in 2:n){
+    if (x[i] < res){
+      res = x[i]
+    }
+  }
+  return(res)
+}
+# Test the function and compare the result to min(zeta)
+min_vec(zeta)
+identical(min_vec(zeta), min(zeta))
+```
+
+2.2 Write a function that creates an $n\times n$ identity matrix using for- or while-loops. Let n be the only argument of this function.
+
+```{r}
+identity = function(n){
+  # Inputs:
+  #   n: Dimension of the square identity matrix
+  # Outputs:
+  #   nxn identity matrix
+  
+  iden = matrix(0, nrow=n, ncol=n)
+  for (i in 1:n){
+    iden[i, i]=1
+  }
+  return(iden)
+}
+identity(3)
+identity(10)
+```
+
+
+2.3 Write a function that creates an $n\times n$ matrix of the following form $\begin{pmatrix} 1 & 2 & 3 & \cdots & n\\ 2 & 2 & 3 & \cdots & n\\ 3 & 3 & 3 & \cdots & n\\ \vdots & \vdots & \vdots & \ddots & \vdots\\ n & n & n & \cdots & n\end{pmatrix}$. Again let n be the only argument of this function. 
+
+```{r}
+mat = function(n){
+  # Inputs:
+  #   n: Dimension of the matrix
+  # Output
+  #   mat_res: nxn matrix
+  
+  mat_res = matrix(0, nrow=n, ncol=n)
+  for (i in 1:n){
+    for (j in 1:n){
+      if (i >= j){
+        mat_res[i, j] = i
+      }
+      else{
+        mat_res[i, j] = j
+      }
+    }
+  }
+  return(mat_res)
+}
+
+# mat()
+mat(5)
+mat(10)
+```
+
+
+
+# Working with a data set
+
+Task: Load the package **'MASS'** and the dataset named **'Boston'**. Save this set in the variable 'Bost'.
+
+```{r   warning=FALSE, error=TRUE}
+library(MASS)
+Bost = Boston
+```
+
+Hint: In the case we want to work with the data set we already had in your own PC, we look at the 'Environment' tab from the top-right window, then click to 'Import Dataset' and follow the instructions.
+
+Task: Have a look at the Boston dataset
+```{r  eval=FALSE, warning=FALSE, error=TRUE}
+View(Bost)
+```
+
+Task: Get the variable names of all variables in the Boston dataset
+```{r   warning=FALSE, error=TRUE}
+names(Bost)
+```
+
+Task: Compute descriptive statistics and frequencies of the Boston dataset (meaning compute the minimum and maximum values, mode, median, etc for each variable in the data set)
+```{r warning=FALSE, error=TRUE}
+summary(Bost)
+```
+We have printed the statistical properties of each variable in the data. Displaying Lowest (min) to highest(max) possible values possible from each variable. 1st (3rd) quantile represent the value greater than or equal to 25% (75%) of the variablle. When the mean is greater than (less than) the median the data is positively (negatively) skewed and the underlying distribution is not normally distributed. 
+
+Task: Extract the third variable in the Boston data set.
+```{r warning=FALSE, error=TRUE}
+Bost[,3]
+```
+
+Task: Take all values from the first to the 90th observations of the 7th variable in the dataset
+```{r warning=FALSE, error=TRUE}
+Bost[1:90,7]
+```
+
+Task: Create a new dataset named 'sub_Bost_1' including variables 1 to 4 and the last three variables
+```{r warning=FALSE, error=TRUE}
+sub_Bost_1 = Bost[,c(1:4,12:14)]
+```
+
+Hint: The task asks us to extract the data set into the sub data set including variables number 1, 2, 3, 4, 12, 13 and 14. So, we have to indicate these indices to R. 
+
+Task: Create a new data set name 'sub_Bost_2' including all variables of the data set Boston except the third variable
+
+```{r warning=FALSE, error=TRUE}
+sub_Bost_2 = Bost[,-3]
+```
+
+Task: Now let's find the mean, variance, range, 25% and 75% quantile and draw the box plot of the first variable in the Boston dataset.
+
+```{r warning=FALSE, error=TRUE}
+mean(Bost[,1])
+var(Bost[,1])
+range(Bost[,1])
+quantile(Bost[,1])
+boxplot(Bost[,1])
+```
+Boxplot depicts that the data is positively skewed. 
+Task: Repeat the procedure by using the name of the variable 'crim' instead.
+
+```{r   warning=FALSE, error=TRUE}
+mean(Bost$crim)
+var(Bost$crim)
+range(Bost$crim)
+quantile(Bost$crim)
+boxplot(Bost$crim)
+```
+
+Task: We suspect that the variables 'tax' and 'indus' are correlated. We display the correlation coefficient matrix to find out whether this may be the case.
+
+```{r warning=FALSE, error=TRUE}
+cor(Bost$tax, Bost$indus)
+```
+Correlation as we all know ranges from -1 to 1. 
+The result 0.72 would indicate a strong positive relationship between 'tax' and 'indus'. 
+
+Task: Let us draw a scatter plot to show graphically this relationship, label the x-axis by 'industry', the y-axis by 'tax'.
+```{r warning=FALSE, error=TRUE}
+plot(Bost$indus, Bost$tax, xlab = 'industry', ylab = 'tax')
+```
+
+Task: Let us regress 'tax' on 'indus' by OLS with **lm(???)**. Assign the result to a new variable named 'result'.
+
+```{r warning=FALSE, error=TRUE}
+result = lm(tax ~ indus, data = Bost)
+```
+
+Task: Summarize the result of the above regression
+
+```{r warning=FALSE, error=TRUE}
+summary(result)
+```
+The 'indus' coefficient (17.71) is quantitatively relevant and is statistically different from zero (p-value ~ 0).
+R-Squared value of 0.5195, means that approximately 51.95% of the variation in the dependent variable tax is explained by the independent variable indus, higher values indicate better fit. 
+
+
+
+Task: Plot the estimated line and the scatter plot in the same figure
+
+Instruction:
+1. Create x and y values of the regression curve
+2. Draw the scatter plot between 'indus' and 'tax'
+3. Draw a line plot between x and y in the same figure, use command 'lines'
+
+```{r warning=FALSE, error=TRUE}
+x = seq(min(Bost[,"indus"]), max(Bost[,"indus"]), by = 0.05)
+x = Bost[,"indus"]
+y = result$coefficients[1] + result$coefficients[2]*x
+plot(Bost[,'indus'], Bost[,'tax'], xlim = range(Bost[,'indus']), ylim = range(Bost[,'tax']), xlab = 'industry', ylab = 'tax')
+lines(x, y, lwd = 2, col = "blue")
+```
+
+
+# Simulations
+
+Simulations the process of creating models or algorithms that mimic real-world phenomena, involving generating synthetic data based on certain assumptions  to study the behavior of a system or to make predictions about its future outcomes.
+
+In Monte Carlo simulations, random variables are generated according to specified probability distributions, and these variables are used to model the behavior of the system being studied.
+
+To carry out simulation we have to draw a sample of some random numbers. We will start with 10 values of the standard normal distribution.
+(By setting a **seed** we'll always get the same random numbers. This is useful for comparing results.)
+
+```{r warning=FALSE, error=TRUE}
+set.seed(8)                   
+x = rnorm(10, mean = 0, sd = 1)
+x
+```
+
+Assume we are interested in the distribution of the t-test statistic. Set up a model - with 100 observations - which we can estimate via OLS. Define x as a uniform and u as a normal distributed random variable.
+
+```{r warning=FALSE, error=TRUE}
+x = runif(100)
+u = rnorm(100, sd = 2)
+y = 1 + 2*x + u
+```
+
+Now we estimate this model via OLS:
+
+```{r warning=FALSE, error=TRUE}
+estim = lm(y~x)
+coeff = estim$coefficients
+print(coeff)
+covariance = vcov(estim)
+```
+
+Construct the t-test statistic for testing the second parameter in our model whether it is 2: 
+
+```{r warning=FALSE, error=TRUE}
+t = (coeff[2]-2)/sqrt(covariance[2,2])
+t
+```
+
+Unfortunately there is only one value for the test statistic. If we would like to obtain the empirical distribution, we have to repeat this procedure a couple of times. To do this we write a function that simulates and estimates the model and returns the test statistic (for the second parameter):
+
+```{r warning=FALSE, error=TRUE}
+statistic = function(){
+  x = runif(1000)
+  u = rnorm(1000, sd = 2)
+  y = 1 + 2*x + u
+  estim = lm(y~x)
+  coeff = estim$coefficients
+  covariance = vcov(estim)
+  t = (coeff[2]-2)/sqrt(covariance[2,2])
+  return(t)
+}
+```
+
+Now we can use this function for the construction of a sequence of test statistics
+
+```{r warning=FALSE, error=TRUE}
+set.seed(8)
+N_MC = 1000 # number of replications in the simulation
+simulation = replicate(N_MC, statistic())
+```
+
+We can use this sequence to plot the empirical distribution and compare this against the theoretical distribution:
+```{r warning=FALSE, error=TRUE}
+# empirical:
+hist(simulation, breaks = 40, probability = T, xlab = "t statistic")
+
+# theoretical:
+x = seq(-5, 5, length.out = 10000)
+y = dnorm(x, sd = 1)
+lines(x, y, col = "green", lwd = 2)
+box()
+
+summary(simulation)
+print('The End!')
+```
+
